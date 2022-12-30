@@ -3,35 +3,45 @@ import React, { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import { Button, Card, CardBody, Heading, Stack, StackDivider, FormControl, IconButton, HStack, Tag, Select, Input } from '@chakra-ui/react'
+import { Button, FormControl, IconButton, Tag, Input } from '@chakra-ui/react'
 
-import { AddIcon, DeleteIcon, CopyIcon } from '@chakra-ui/icons'
+import { AddIcon, } from '@chakra-ui/icons'
 import { useDispatch } from 'react-redux';
-import { appendData } from './habitSlice';
+import { addHabbit } from '../habit/habitSlice';
+import { useSelector } from 'react-redux';
 
-
-function NewModal() {
+function NewModal(props) {
+    const data = useSelector(state => state.habit.data)
     const [show, setShow] = useState(false);
-
     const dispatch = useDispatch()
-
-    const [selection,setSelection] = useState("blank")
-
-
-
-
+    const [activity,setActivity] = useState("")
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+
     const handleSubmit = () => {
-        console.log("reached")
-        dispatch(appendData(selection));
+
+
+
+        const datenew = props.selected?.toLocaleDateString()
+
+
+        if(activity in data){
+            alert("Activity already exists")
+
+        }
+
+        else{
+            const newobj = {...data}
+            newobj[activity] = []
+            dispatch(addHabbit(newobj));
+        }
+
+
         setShow(false);
+        setActivity('')
     }
 
-    const handleChange = (e) => setSelection(e.target.value);
-    
-
-    
+    const handleChange = (e) => setActivity(e.target.value);
 
     return (
         <>
@@ -57,15 +67,13 @@ function NewModal() {
 
                     <FormControl>
 
-                        <Tag htmlFor="text">Please Select an Option</Tag>
-                        <Select placeholder='Select option' value = {selection} onChange= {handleChange} >
-                            <option value='Gym'>Gym</option>
-                            <option value='Run'>Run</option>
-                            <option value='Read'>Read</option>
-                            <option value='Meditate'>Meditate</option>
-                            <option value='Music'>Music</option>
-                        </Select>
-                        {/* <button>Submit</button> */}
+                        <Tag htmlFor="text">Please enter an activity</Tag>
+                        <Input
+                            value={activity}
+                            onChange={handleChange}
+                            placeholder='Activity'
+                            size='sm'
+                        />
                     </FormControl>
                 </Modal.Body>
 

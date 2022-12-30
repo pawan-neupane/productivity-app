@@ -1,6 +1,4 @@
 import React from "react";
-import { Activity } from "./features/activity/Activity";
-
 import { ChakraProvider, Box } from '@chakra-ui/react'
 import Habit from "./features/habit";
 
